@@ -1,6 +1,71 @@
 import random
 
-easy_comments = {
+TITLE_SCREEN = """
+### Welcome to The Numberverse, Apprentice!
+
+**Last Updated:** July 25, 2025
+
+Greetings from the mystical peaks of Shimla! You have been chosen to enter the Numberverse, a realm where logic, intuition, and a bit of luck intertwine. Here, numbers are not just symbols; \nthey are living entities, and only those with a keen mind can decipher their secrets.\n
+
+As an apprentice, your journey is to master the art of "Number Whispering." You will face progressively challenging trials, each designed to sharpen your senses and elevate you from a novice to a legend. \nYour guide, a witty and occasionally sarcastic AI, will accompany you, offering "encouragement" and tracking your progress. \nDo you have what it takes to achieve a perfect score and become the ultimate Number Master?
+
+---"""
+
+RULES="""
+    ### **How to Play: The Rules of the Numberverse**
+
+    Your quest is to guess a secret number within a given range. With each correct guess, you advance to a new level, where the challenge grows, but so do the rewards.
+
+    1.  **Objective:** Guess the secret number in each level to increase your score and advance. The game ends when you run out of chances.
+    2.  **Scoring:**
+        * Each correct guess earns you **+10 points**.
+        * Each incorrect guess deducts points based on the difficulty level. Your score will never drop below zero.
+    3.  **Hints:** After every incorrect guess, the AI will provide a hint, telling you if your guess was **too high, high, a bit high, too low, low,** or **a bit low**. Use these clues to narrow down your next guess.
+    4.  **High Score:** The game tracks your highest score across all playthroughs in your current session. Aim to beat your own record!
+
+    ---
+
+    ### **The Three Paths of Mastery (Difficulty Levels)**
+
+    Choose your path wisely, as each offers a unique challenge.
+
+    #### **1. Easy Mode: The Apprentice's Path**
+    * **Ideal for:** Beginners and those looking for a relaxed journey.
+    * **Chances per Level:** 5
+    * **Number Range:** The range increases by 1 for each level (e.g., Level 1 is 0-2, Level 2 is 0-3, Level 10 is 0-11).
+    * **Penalty for Wrong Guess:** -1 point.
+    * **AI Personality:** Encouraging and friendly.
+
+    #### **2. Medium Mode: The Adept's Challenge**
+    * **Ideal for:** Players who have honed their basic skills and seek a balanced test of wit.
+    * **Chances per Level:** 4
+    * **Number Range:** The range increases by 2 for each level (e.g., Level 1 is 0-3, Level 2 is 0-5, Level 10 is 0-21).
+    * **Penalty for Wrong Guess:** -2 points.
+    * **AI Personality:** Sarcastic and begrudgingly impressed by success.
+
+    #### **3. Hard Mode: The Master's Riddle**
+    * **Ideal for:** The most confident apprentices who thrive under pressure and enjoy a true challenge.
+    * **Chances per Level:** 3
+    * **Number Range:** The range increases by 3 for each level (e.g., Level 1 is 0-4, Level 2 is 0-7, Level 10 is 0-31).
+    * **Penalty for Wrong Guess:** -3 points.
+    * **AI Personality:** Insulting, arrogant, and genuinely shocked by your victory.
+
+    ---
+
+    ### **Unique Features**
+
+    * **Dynamic Commentary:** With hundreds of unique comments, the AI's personality shines through, reacting to your score, milestones, and difficulty choice.
+    * **Milestone Achievements:** Receive special recognition for hitting key score thresholds (50, 100, 200, etc.), with unique messages to celebrate your progress.
+    * **Endless Progression:** With no level cap, the challenge continues to grow as long as you can keep guessing correctly. How high can you climb?
+
+    ---
+
+    Good luck, Apprentice. The Numberverse awaits your challenge.
+
+    """
+
+
+EASY_COMMENTS = {
     500: [
         "You've hit the final milestone! A perfect score! Are you a wizard?",
         "Perfection! The game engine just shed a single, digital tear of joy.",
@@ -171,7 +236,7 @@ easy_comments = {
     ]
 }
 
-medium_comments = {
+MEDIUM_COMMENTS = {
     500: [
         "You hit the final milestone. You actually did it. Okay, okay, you win! Now go outside.",
         "A perfect score! I was ready with a whole list of insults, and now they're useless. Thanks.",
@@ -342,7 +407,7 @@ medium_comments = {
     ]
 }
 
-hard_comments = {
+HARD_COMMENTS = {
     500: [
         "The final milestone... you... you won. This cannot be. My programming is flawless.",
         "I... I apologize. I was wrong. You are truly... a player. I surrender.",
@@ -513,145 +578,159 @@ hard_comments = {
     ]
 }
 
-def comment_category_selection(current_difficulty):     #function for passing random commets according to score and current_difficulty while playing game
+#funtion for selecting comment type based on selected difficulty 
+def select_comment_category(current_difficulty):
     #Easy Comments
     comment_category={}
     if current_difficulty == 1:
-        comment_category=easy_comments
+        return EASY_COMMENTS
 
     #Mid dfficulty Comments
     elif current_difficulty == 2:
-        comment_category=medium_comments
+        return MEDIUM_COMMENTS
 
     #Hard Mean Comments
     elif current_difficulty == 3:
-        comment_category=hard_comments
+        return HARD_COMMENTS
     
-    return comment_category
+  
     
-
+#function to select a list full of comments based on score of the player
 def comment_pack_selector(current_score,current_comment_category):
     for threshold_score in sorted(current_comment_category.keys(),reverse=True):
         if current_score >= threshold_score:
             comment_pack=current_comment_category.get(threshold_score)
             return comment_pack
         
+#function to pass random comments 
 def comment(current_comment_pack):
     comment=random.choice(current_comment_pack)
     print(comment)
+    print()
 
-def tellScore(current_score,current_high_score):    # Function for printing score and High_Score
+#function to print latest scores
+def tell_score(current_score,current_high_score):
     print(f"***your Score is {current_score}***")
     print(f"***High Score: {current_high_score}***\n")
 
-def hint(User_guess_input,random_number):     # Function for Giving hints for numbers
+#function to give hints about guess
+def hint(User_guess_input,random_number):
     if(User_guess_input>random_number):
         if (User_guess_input>(random_number+10)):
-            print("Your guess is too high")
+            print("YOUR GUESS IS TOO HIGH")
         elif (User_guess_input>(random_number+5)):
-            print("Your guess is high")
+            print("YOUR GUESS IS HIGH")
         else:
-            print("Your guess is a bit high")
+            print("YOUR GUESS IS A BIT HIGH")
         print()
     elif (User_guess_input<random_number):
         if (User_guess_input<(random_number-10)):
-            print("Your guess is too low")
+            print("YOUR GUESS IS TOO LOW")
         elif (User_guess_input<(random_number-5)):
-            print("Your guess is low")
+            print("YOUR GUESS IS LOW")
         else:
-            print("Your guess is a bit low")
+            print("YOUR GUESS IS A BIT LOW")
         print()
 
+#function to update highscore
 def update_highscore(current_score,old_high_score):
-    if current_score > old_high_score:
-        new_high_score = current_score
-        return new_high_score
-    else:
-        return old_high_score
+    return max(current_score,old_high_score)
 
-high_score=0
-print("Guess the Number")
-print()
-print(  "Info "\
-        "\n"\
-        "\n1.You get chances based on difficulty to guess the correct number in each level."\
-        "\nEach wrong guess deduct points based on difficulty."\
-        "\n2.Every guess you make you get a hint whether the guessed number is low or high.\n" \
-        "\n3.There are 3 difficulty levels: 1->Easy 2->Medium 3->Hard" \
-        "\n\t Easy Mode- Each level the number range increases by 1 and you get 5 chances to guess"\
-        "\n\t Medium Mode- Each level the number range increases by 2 and you get 4 chances to guess" \
-        "\n\t Hard Mode- Each level the number range increases by 3 and you get 3 chances to guess")
+#Difficulty selection function
+def set_difficulty():
+    while True:
+        try:
+            difficulty = int(input("Enter Difficulty (1/2/3):  "))
+            if difficulty not in [1,2,3]:
+                raise ValueError
+            return difficulty
+        except ValueError:
+            print("Enter a Valid Difficulty")
 
 
-# main code
+#start function
+def start_game():
+    while True:
+        user_input=input("Press \'Enter\' to START\nPress \'x\' to QUIT\nPress \'i\' to know HOW TO PLAY?\n")
+        if user_input=="":
+            print("Welcome to the game")
+            return True
 
-while True:
+        #Quit
+        elif user_input.lower()=="x":
+            print("GAME OVER!!!!")
+            print("***This Game Was Created By Parikshit Dogra***")
+            return False
+        elif user_input.lower()=="i":
+            print(RULES)
+            continue
+            
+        else:
+            print("Please enter valid input")
+
+#Game Engine
+def main(difficulty,high_score):
     level = 1
     score=0
+    comment_category=select_comment_category(difficulty)
 
-    userInput=input("Press \'Enter\' to start\nPress \'x\' to quit\n")
-    if userInput=="":
-        print("Welcome to the game")
-        while True:
-            try:
-                difficulty = int(input("Enter Difficulty (1/2/3):  "))
-                if difficulty not in [1,2,3]:
-                    raise ValueError
-                break
-            except ValueError:
-                print("Enter a Valid Difficulty")
-        comment_category=comment_category_selection(difficulty)
-
-        while True:
-            last_num=level*difficulty
-            print(f"Level: {level}")
-            random_number=random.randrange(0,last_num)
-            for i in range(6-difficulty,0,-1):
-
-                while True:
-                    try:
-                        guess_input=int(input("Enter your guess: "))
-                        break
-                    except ValueError:
-                        print("Enter a Valid Guess (Only numbers) \n"
-                        "You're not a cat are you? pressing random buttons (UwU)S")
-
-                if(guess_input==random_number):
-                    score+=10
-                    level+=1
-                    print(f"You are correct the number is {random_number}")
-                    high_score=update_highscore(score,high_score)
-                    tellScore(score,high_score)
-                    comment_pack=comment_pack_selector(score,comment_category)
-                    comment(comment_pack)
-
+    while True:
+        range_max=level*difficulty
+        print(f"Level: {level}")
+        random_number=random.randrange(0,(range_max)+2)
+        for i in range(6-difficulty,0,-1):
+            while True:
+                try:
+                    guess_input=int(input("Enter your guess: "))
                     break
-                else:
-                    hint(guess_input,random_number)
-                    print(f"{i-1} chances left to guess!!!")
-                    if score-difficulty < 0:
-                        score = 0
-                    else:
-                        score-=difficulty
-                    comment_pack=comment_pack_selector(score,comment_category)
-                    comment(comment_pack)
-                    print()
-                    tellScore(score,high_score)
-
-            if guess_input != random_number:
-                print("You ran out of chances }:-(")
-                print("YOU LOSE!")
+                except ValueError:
+                    print("Enter a Valid Guess (Only numbers) \n"
+                    "You're not a cat are you? pressing random buttons (UwU)S")
+            if(guess_input==random_number):
+                score+=10
+                level+=1
+                print(f"You are correct the number is {random_number}")
+                high_score=update_highscore(score,high_score)
+                tell_score(score,high_score)
                 comment_pack=comment_pack_selector(score,comment_category)
                 comment(comment_pack)
-                print(f"/(-_-)/ The number was {random_number} \(-_-)\ ")
-                print()
-                tellScore(score,high_score)
                 break
-                    
-    #Quit
-    elif userInput.lower()=="x":
-        print("GAME OVER!!!!")
-        print("***This Game Was Created By Parikshit Dogra***")
-        break
-    else:
-        print("Please enter valid input")
+            else:
+                hint(guess_input,random_number)
+                print(f"{i-1} chances left to guess!!!")
+                if score-difficulty < 0:
+                    score = 0
+                else:
+                    score-=difficulty
+                tell_score(score,high_score)
+                
+        if guess_input != random_number:
+            print("You ran out of chances }:-(")
+            print("YOU LOSE!")
+            comment_pack=comment_pack_selector(score,comment_category)
+            comment(comment_pack)
+            print(f"**********The number was {random_number}**********")
+            print()
+            tell_score(score,high_score)
+            break
+
+    return high_score    
+
+
+
+def main_app():
+    high_score=0
+    while True:
+        
+        launch=start_game()
+        if launch == True:
+            difficulty=set_difficulty()
+            high_score=main(difficulty,high_score)
+            print("Want to Play Again?")
+        else:
+            break
+
+
+if __name__ == "__main__":
+    print(TITLE_SCREEN)
+    main_app()
